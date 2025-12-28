@@ -1,0 +1,22 @@
+# --- Deep Learning & AI ---
+torch
+torchvision
+torchaudio
+transformers
+accelerate
+datasets
+
+# --- Data Processing & Math ---
+numpy
+pandas
+scipy
+scikit-learn
+
+# --- Visualization ---
+matplotlib
+seaborn
+
+# --- Utilities ---
+tqdm
+jupyter
+ipykernel

@@ -1,0 +1,34 @@
+# --- Python General ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+.venv/
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# --- Data Sets  ---
+data/raw/*.mat
+data/processed/*.npy
+data/processed/*.csv
+*.mat
+*.zip
+
+# --- Hugging Face & Model Weights ---
+models/
+cache/
+*.pt
+*.pth
+*.bin
+*.h5
+
+# --- IDE Settings ---
+.vscode/
+.idea/
+.DS_Store
