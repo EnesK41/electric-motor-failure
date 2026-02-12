@@ -13,27 +13,6 @@ The system treats fault diagnosis as a **signal-to-text** generation task. It us
 - **Projection Layer**:
   - A simple Linear + ReLU + Dropout layer maps the 768-dim encoder output to the 768-dim decoder input space.
 
-```mermaid
-graph TD
-    subgraph Preprocessing [Signal Processing Pipeline]
-        A[Raw Vibration Data] -->|Resample 16kHz| B(Sliding Window)
-        B -->|1024 Samples| C(Spectrogram Generation)
-    end
-    
-    subgraph Model [Neural Network Architecture]
-        C -->|Input| D{AST Encoder}
-        D -->|768-dim Vector| E[Linear Projection Layer]
-        E -->|Feature Embeddings| F{GPT-2 Decoder}
-    end
-    
-    F --> G[Generated Diagnosis Report]
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style G fill:#9f9,stroke:#333,stroke-width:2px
-    style D fill:#bbf,stroke:#333,stroke-width:2px
-    style F fill:#bbf,stroke:#333,stroke-width:2px
-```
-
 ## Performance
 The model has been fine-tuned and evaluated on the CWRU dataset (480 samples).
 
