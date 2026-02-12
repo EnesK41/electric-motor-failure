@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
 from transformers import ASTModel, GPT2LMHeadModel
+import config
 
 class SignalCaptioningModel(nn.Module):
-    def __init__(self, encoder_name, decoder_name):
+    def __init__(self, encoder_name=config.ENCODER_ID, decoder_name=config.DECODER_ID):
         super(SignalCaptioningModel, self).__init__()
 
         print(f"Loading Encoder: {encoder_name}...")
@@ -12,37 +13,46 @@ class SignalCaptioningModel(nn.Module):
         print(f"Loading Decoder: {decoder_name}...")
         self.decoder = GPT2LMHeadModel.from_pretrained(decoder_name)
 
-
-        self.encoder_dim = 768
-        self.decoder_dim = 768
+        self.encoder_dim = config.ENCODER_DIM
+        self.decoder_dim = config.DECODER_DIM
 
         self.projection = nn.Sequential(
             nn.Linear(self.encoder_dim, self.decoder_dim),
-            nn.ReLU(),   #It filters noise(Negative signals) and also gives our model the ability to think
-            nn.Dropout(0.1) #To prevent memorization, also called Regularization?
+            nn.ReLU(),
+            nn.Dropout(0.1)
         )
 
     def forward(self, input_values, labels=None):
-        # input: processed signals from AST
-        # labels: target sentences
-
-        #Signal to encoder
+        """
+        Forward pass for the model.
+        Args:
+            input_values: Processed audio features from ASTFeatureExtractor.
+            labels: usage for training, tokenized target sentences.
+        """
+        
+        # 1. Encode the audio signal
         encoder_outputs = self.encoder(input_values)
 
-        #Translate it
-        signal_embedding = encoder_outputs.pooler_output
-
-        projected_embedding = self.projection(signal_embedding).unsqueeze(1)
+        # 2. Project encoder output to decoder dimension
+        signal_embeds = self.projection(encoder_outputs.pooler_output).unsqueeze(1)
 
         if labels is not None:
-            #Training
-
-            #Give both the answer and signal to calculate the loss
-            outputs =   self.decoder(input_embeds = projected_embedding , labels = labels)
-            return outputs
-        else:
-            #Production
+            # --- Training Phase ---
             
-            pass
+            # Get embeddings for the target text
+            word_embeds = self.decoder.transformer.wte(labels)
 
-print("Model initialized successfully.")
+            # Concatenate signal embeddings with text embeddings
+            full_embeds = torch.cat((signal_embeds, word_embeds), dim=1)
+
+            # Create labels for loss calculation (ignore index -100 for the signal part)
+            ignore_index = torch.full((labels.size(0), 1), -100, device=labels.device)
+            full_labels = torch.cat((ignore_index, labels), dim=1)
+
+            # Forward pass through decoder
+            outputs = self.decoder(inputs_embeds=full_embeds, labels=full_labels)
+            return outputs
+        
+        else:
+            # --- Inference Phase ---
+            return signal_embeds

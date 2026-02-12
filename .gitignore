@@ -1,4 +1,4 @@
-# --- Python General ---
+# Python
 __pycache__/
 *.pyc
 *.pyo
@@ -9,28 +9,25 @@ venv/
 .env
 .venv/
 
-# --- Jupyter Notebooks ---
+# Jupyter
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
-# --- Data Sets  ---
+# Data
 data/raw/*.mat
-data/processed/*.npy
-data/processed/*.csv
+data/processed/
 *.mat
 *.zip
+*.tar.gz
 
-# --- Hugging Face & Model Weights ---
-models/
-cache/
+# Models
 *.pt
 *.pth
 *.bin
 *.h5
+models/
 
-# --- IDE Settings ---
+# IDEs
 .vscode/
 .idea/
 .DS_Store
-
-learning.txt

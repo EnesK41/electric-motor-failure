@@ -1,4 +1,4 @@
-# --- Deep Learning & AI ---
+# Deep Learning
 torch
 torchvision
 torchaudio
@@ -6,17 +6,18 @@ transformers
 accelerate
 datasets
 
-# --- Data Processing & Math ---
+# Data Processing
 numpy
 pandas
 scipy
 scikit-learn
 
-# --- Visualization ---
+# Visualization
 matplotlib
 seaborn
 
-# --- Utilities ---
+# Utilities
 tqdm
 jupyter
 ipykernel
+requests
